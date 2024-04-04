@@ -11,8 +11,10 @@
     "lint": "run-p lint-css lint-code"
   },
   "dependencies": {
+    "@apollo/client": "^3.9.10",
     "@carbon/icons-react": "^11.39.0",
     "@carbon/react": "^1.54.0",
+    "graphql": "^16.8.1",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18"
