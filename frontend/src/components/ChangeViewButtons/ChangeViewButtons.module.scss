@@ -1,0 +1,30 @@
+.buttons {
+  display: flex;
+  align-items: stretch;
+  background: var(--cds-field);
+  height: 2.5rem;
+  border-bottom: 1px solid var(--cds-border-strong);
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  padding: .2em .4em;
+  background: var(--cds-field);
+  cursor: pointer;
+
+  &>svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: #b5b5b5;
+  }
+
+  &:hover,
+  &.active {
+    background: var(--cds-field-hover);
+
+    &>svg {
+      fill: black;
+    }
+  }
+}

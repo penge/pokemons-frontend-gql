@@ -1,0 +1,20 @@
+@use "sass:color";
+
+.notification {
+  border-left: 0;
+  margin: 5px;
+
+  &>svg {
+    display: none;
+  }
+
+  &>button {
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      background: color.adjust(#393939, $lightness: 20);
+    }
+  }
+}

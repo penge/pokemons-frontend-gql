@@ -1,0 +1,9 @@
+.button {
+  cursor: pointer;
+
+  &>svg {
+    fill: red;
+    width: var(--icon-size);
+    height: var(--icon-size);
+  }
+}

@@ -1,0 +1,57 @@
+$input-width: 250px;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: $input-width * 2;
+  gap: 0.5em;
+  margin-bottom: 2em;
+
+  &>.row {
+    display: flex;
+    align-items: flex-end;
+
+    & button,
+    & input,
+    & select {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    & button {
+      &:focus, &:active {
+        &::before {
+          background-color: transparent;
+        }
+      }
+    }
+
+    & [role="tablist"] {
+      width: $input-width * 2;
+
+      &>button {
+        font-size: 1.2em;
+        font-weight: bold;
+        font-style: italic;
+        border-radius: 0 !important;
+      }
+    }
+
+    &:last-of-type {
+      border: 1px solid var(--cds-border-strong);
+      border-bottom: none;
+
+      &>div:first-of-type {
+        // width: 100%;
+        width: $input-width - 2px;
+        max-width: $input-width - 2px;
+      }
+    }
+
+    & select {
+      border-left: 1px solid var(--cds-border-strong);
+      border-right: 1px solid var(--cds-border-strong);
+    }
+  }
+}

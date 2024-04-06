@@ -1,0 +1,111 @@
+@use "sass:color";
+
+$border-color: #e0e0e0;
+$border: 1px solid $border-color;
+$border-radius: 10px;
+
+.pokemon {
+  border: $border;
+  border-radius: $border-radius;
+  background: #e8e8e8;
+
+  .image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background: white;
+
+    .scale {
+      cursor: pointer;
+      position: absolute;
+      top: 0.5em;
+      right: 0.5em;
+      width: var(--icon-size);
+      height: var(--icon-size);
+      fill: $border-color;
+
+      &:hover {
+        fill: color.adjust($border-color, $lightness: -20);
+      }
+    }
+  }
+
+  &.medium-tile {
+    .name {
+      font-size: 140%;
+      line-height: 180%;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #e8e8e8;
+    padding: 0.5em;
+
+    .info {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-weight: bold;
+      }
+    }
+
+    &.progress {
+      &>span {
+        text-wrap: nowrap;
+        min-width: 75px;
+        padding: 0 5px;
+      }
+    }
+
+    &.dimensions {
+      border-top: 1px solid silver;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: stretch;
+      padding: 0;
+
+      &>div:not(.separator) {
+        padding: 1em;
+      }
+
+      .separator {
+        width: 1px;
+        background: silver;
+      }
+    }
+  }
+
+  &.list {
+    display: flex;
+
+    .image-container {
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+    }
+
+    .footer {
+      width: 100%;
+      padding: 0.5em 1em 0.5em 0.5em;
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+  }
+
+  &:not(.list) {
+    .image-container {
+      border-top-left-radius: $border-radius;
+      border-top-right-radius: $border-radius;
+    }
+
+    .footer {
+      &:last-of-type {
+        border-bottom-left-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
+      }
+    }
+  }
+}
