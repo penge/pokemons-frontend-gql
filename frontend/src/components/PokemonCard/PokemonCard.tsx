@@ -1,4 +1,6 @@
 import React, { LegacyRef } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { isEqual, isNumber } from "lodash-es";
 import {
@@ -9,6 +11,7 @@ import {
 import { Scale } from "@carbon/icons-react";
 import { View } from "@/components/ChangeViewButtons/ChangeViewButtons";
 import { PokemonImage } from "@/components/PokemonImage/PokemonImage";
+import { PokemonSound } from "../PokemonSound/PokemonSound";
 import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton";
 import { PokemonProgressBar } from "@/components/PokemonProgressBar/PokemonProgressBar";
 import { PokemonDimension } from "@/components/PokemonDimension/PokemonDimension";
@@ -16,16 +19,21 @@ import { addNotification } from "@/api/notifications";
 import classes from "./PokemonCard.module.scss";
 
 export type PokemonCard =
-  Pick<Pokemon, "id" | "name" | "image" | "types" | "isFavorite">
-  & Partial<Pick<Pokemon, "maxCP" | "maxHP" | "weight" | "height">>;
+  Pick<Pokemon, "id" | "name" | "image" | "isFavorite">
+  & Partial<Pick<Pokemon, "sound" | "types" | "maxCP" | "maxHP" | "weight" | "height">>;
 
 interface PokemonCardProps {
   pokemon: PokemonCard
-  view: View | "medium-tile"
+  view: View | "medium-tile" | "large-tile"
   onDetail?: () => void
 }
 
 export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetail }: PokemonCardProps, ref?: LegacyRef<HTMLDivElement>) => {
+  const pathname = usePathname();
+
+  const pokemonLink = `/${pokemon.name.toLowerCase()}`;
+  const pokemonLinkDisabled = pathname === pokemonLink;
+
   const variables = { id: pokemon.id };
   const onCompleted = <TData extends { id: string, name: string, isFavorite: boolean }>({ id, name, isFavorite }: TData) => {
     addNotification({ id, name, isFavorite });
@@ -51,20 +59,35 @@ export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetai
           <Scale className={classes.scale} onClick={onDetail} />
         )}
 
-        <PokemonImage
-          image={pokemon.image}
-          name={pokemon.name}
-          size={{
-            list: { width: "100px", height: "100px" },
-            tile: { width: "200px", height: "250px" },
-            "medium-tile": { width: "320px", height: "320px" },
-          }[view]}
-        />
+        <Link
+          href={pokemonLink}
+          className={clsx({ [classes.disabled]: pokemonLinkDisabled })}
+        >
+          <PokemonImage
+            image={pokemon.image}
+            name={pokemon.name}
+            size={{
+              list: { width: "100px", height: "100px" },
+              tile: { width: "200px", height: "250px" },
+              "medium-tile": { width: "320px", height: "320px" },
+              "large-tile": { width: "400px", height: "400px" },
+            }[view]}
+          />
+        </Link>
+
+        {pokemon.sound && (
+          <div className={classes.sound}>
+            <PokemonSound sound={pokemon.sound} />
+          </div>
+        )}
       </div>
 
       <div className={classes.footer}>
         <div className={classes.info}>
-          <span className={classes.name}>{pokemon.name}</span>
+          <Link
+            href={pokemonLink}
+            className={clsx(classes.name, { [classes.disabled]: pokemonLinkDisabled })}
+          >{pokemon.name}</Link>
 
           {pokemon.types && pokemon.types.length > 0 && (
             <span>{pokemon.types.join(", ")}</span>

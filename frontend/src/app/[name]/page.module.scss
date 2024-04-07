@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+.evolutions {
+  display: flex;
+  flex-direction: column;
+
+  h4 {
+    font-weight: bold;
+  }
+
+  .cards {
+    display: flex;
+    gap: 0.5em;
+  }
+}

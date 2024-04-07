@@ -28,9 +28,16 @@ $border-radius: 10px;
         fill: color.adjust($border-color, $lightness: -20);
       }
     }
+
+    .sound {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
   }
 
-  &.medium-tile {
+  &.medium-tile,
+  &.large-tile {
     .name {
       font-size: 140%;
       line-height: 180%;
@@ -49,7 +56,13 @@ $border-radius: 10px;
       flex-direction: column;
 
       .name {
+        color: black;
         font-weight: bold;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
 
@@ -108,4 +121,8 @@ $border-radius: 10px;
       }
     }
   }
+}
+
+a.disabled {
+  pointer-events: none;
 }

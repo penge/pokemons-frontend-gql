@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import clsx from "clsx";
+import { omit } from "lodash-es";
 import { InlineLoading, Modal } from "@carbon/react";
 import { View } from "@/components/ChangeViewButtons/ChangeViewButtons";
 import { PokemonCard } from "@/components/PokemonCard/PokemonCard";
@@ -36,7 +37,7 @@ export const PokemonCards = ({ pokemons, view, onReachedLastPokemon }: PokemonCa
         {open && loading && <InlineLoading style={{ margin: "1em" }} />}
         {open && !loading && data?.pokemonByName && (
           <PokemonCard
-            pokemon={data.pokemonByName}
+            pokemon={omit(data.pokemonByName, "sound")}
             view="medium-tile"
           />
         )}
