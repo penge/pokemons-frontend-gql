@@ -1,65 +1,47 @@
 # Coding Exercise Frontend
 
-This repository contains a coding exercise for new developers joining the frontend development team.
+The goal was to implement **GraphQL Pokemon Client** ([frontend](./frontend/)) as defined in [EXERCISE](./EXERCISE.md).
 
-Fork this repository and create your own exercise!
+> I have to say, I've enjoyed this exercise immensely! 😊 Please, see Notes below on how I decided to solve it.
 
-## What we want you to build
+## Notes
 
-Your mission is to build a small [Pokedex](https://www.pokemon.com/us/pokedex/) application that looks similar to the next (but remember, you have freedom to express yourself!):
+After getting a good understanding of the needed tools and approach, I have:
 
-List View           |  Detail View
-:-------------------------:|:-------------------------:
-![](example/example-list-view.png) |  ![](example/example-detail-view.png)
+- Initialized a new [Next.js](https://nextjs.org/) project with the following settings:
+  - [TypeScript](https://www.typescriptlang.org/)
+  - [ESLint](https://eslint.org/)
+  - [`src`](https://nextjs.org/docs/app/building-your-application/configuring/src-directory) directory
+  - [App Router](https://nextjs.org/docs/app)
+  - default import alias (`@/*`)
+- Installed [Carbon](https://carbondesignsystem.com/),
+- Installed [Apollo Client](https://www.apollographql.com/docs/react/),
+- And set up the development environment with [EditorConfig](https://editorconfig.org/), [ESLint](https://eslint.org/) (included in Next.js) and [Stylelint](https://stylelint.io/), and updated the scripts accordingly.
 
-A video example can be found in the example folder in the root of the directory as `example.mov`
+The next major step ahead of me was to prepare [_Queries_](./frontend/src/api/queries/) and [_Mutations_](./frontend/src/api/mutations/). I have prepared and tested them in [Insomnia](https://insomnia.rest/).
+I then used [codegen](https://www.graphql-cli.com/codegen/) to generate all necessary Types, Operations, and Hooks.
+Because the GraphQL server supports GraphQL Introspection, it was used to generate the schema, and so it didn't have to be copy-pasted into the project.
+The result of the generation can be found under the directory [generated](./frontend/src/api/generated/).
 
-The features we expect that your app would contain would be:
+> The main benefit in using _codegen_, besides faster developer experience, is to ensure type safety in _Queries_ (and _Mutations_) where we prevent accidentally accessing field that wasn't queried (or was queried but under a different name), or trying to call some operation on a wrong type.
 
-- Search for Pokemon by text through use of a search bar.
-- Filter Pokemon by type using a dropdown.
-- Add and remove a Pokemon to and from your Favorites by clicking the heart icon.
-- Use tabs to switch between `All` Pokemon and `Favorite` Pokemon views.
-- Change the view from either a grid or list.
-- View Pokemon details using a `/:name` route.
-- Clicking on a Pokemon image or name should navigate to the above route to view the Pokemon details.
+Once this was all ready, I have implemented **Index** page, and **Detail** page.
 
-In addition to the above features, below are some optional features that we'd love to see:
-- On the Pokemon details page, have a speaker icon that, when clicked, plays the sound of that Pokemon.
-- Infinitely scrolled or paginated list to handle on-demand data-fetching for the long list of Pokemon.
-- Add a quick view button on the Pokemon list items that shows a modal with more information of the Pokemon.
-- Add toast notifications to show success or error messages when adding or removing a Pokemon to and from your Favorites.
+At the end, I have added example tests. I have used [Vitest](https://vitest.dev/) for unit tests, and [Playwright](https://playwright.dev/) for end-to-end tests. As this is something that could be improved for quite some time, I have picked what I found most important to test.
 
-## What we provide in this repository
+### Technical challenges
 
-### Backend (`/backend`)
-We have provided you with a simple [GraphQL](https://graphql.org/learn) server that serves Pokemon data. The server is non-persistent and therefore on server restart, data will reset.
+There have been challenges along the way that could be a good source for discussion and improvement:
 
-To run the server:
+1. After a mutation (unfavorite pokemon), I would like to be able to modify cache [only for certain queries](https://github.com/apollographql/apollo-client/issues/7129) (not all queries) based on their key arguments.
 
-```
-$ cd backend
-$ npm install
-$ npm start
-```
+2. After calling a Lazy query, and then calling Query (not Lazy) for the same query, I would like Query to retrieve results from cache, but they seem to be two different cache groups and so a network request is made.
 
-After running the backend, you can access https://localhost:4000/graphql in the browser, you'll be presented with a GraphQL Playground that allows you to run Queries and Mutations as well as view the GraphQL Schema.
+I have tackled these challenges by defining a custom `read` function inside the client.
 
-A sample query:
-```
-query { pokemons(query: { limit: 10, offset: 0 }) { edges { name } } }
-```
+The next challenge I had, is [no useNotification hook](https://github.com/carbon-design-system/carbon/issues/8405) (in Carbon).
+I decided to go for easiest alternative solution using [**Reactive variables**](https://www.apollographql.com/docs/react/local-state/reactive-variables), as we use Apollo Client already.
 
-### Frontend (`/frontend`)
-This is the place for your code.
+<br>
 
-### Technology and boilerplate
-
-You are free to use whatever stack you want but what we value the most is [Next.js](https://nextjs.org/) and [Apollo](https://www.apollographql.com/).
-
-Use only what you are comfortable with and feel free to use any additional libraries you deem necessary to complete the exercise. If you want to use a component library, our preferred choice would be [Carbon Design System](https://www.carbondesignsystem.com/). **However**, we would like to see your CSS skills so make sure you show them to us! (layout, animation/transitions...).
-
-### Hints
-- There is no need to configure a build, the development environment is sufficient.
-- It's recommented to use a CSS pre-processor (Sass).
-- Feel free to ask us if you have any doubt or you face any problem!
+I hope you like the solution. Let me know! 👋
