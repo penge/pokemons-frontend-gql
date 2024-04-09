@@ -24,6 +24,7 @@ export const ChangeViewButtons = ({ currentView, onChangedView }: ChangeViewButt
         key={view}
         className={clsx(classes.button, { [classes.active]: currentView === view })}
         onClick={() => onChangedView(view)}
+        data-testid={`${view}-view-button`}
       >{viewIcons[view]()}</div>
     ))}
   </div>

@@ -27,6 +27,8 @@ export const PokemonSound = ({ sound }: PokemonSoundProps) => {
       size={48}
       className={classes.play}
       onClick={play}
+      data-testid="play-pokemon-sound-button"
+      data-sound={sound}
     />
   );
 }

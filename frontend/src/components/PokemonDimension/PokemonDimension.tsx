@@ -9,7 +9,11 @@ export const PokemonDimension = ({ title, dimension }: PokemonDimensionProps) =>
   return (
     <div>
       <h5>{title}</h5>
-      <div>{dimension.minimum} - {dimension.maximum}</div>
+      <div>
+        <span data-testid={`pokemon-minimum-${title.toLowerCase()}`}>{dimension.minimum}</span>
+        {" - "}
+        <span data-testid={`pokemon-maximum-${title.toLowerCase()}`}>{dimension.maximum}</span>
+      </div>
     </div>
   );
 }

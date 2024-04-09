@@ -31,7 +31,8 @@ interface PokemonCardProps {
 export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetail }: PokemonCardProps, ref?: LegacyRef<HTMLDivElement>) => {
   const pathname = usePathname();
 
-  const pokemonLink = `/${pokemon.name.toLowerCase()}`;
+  const pokemonLowerCasedName = pokemon.name.toLowerCase();
+  const pokemonLink = `/${pokemonLowerCasedName}`;
   const pokemonLinkDisabled = pathname === pokemonLink;
 
   const variables = { id: pokemon.id };
@@ -53,6 +54,7 @@ export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetai
     <div
       className={clsx(classes.pokemon, classes[view])}
       ref={ref}
+      data-testid={`pokemon-${pokemonLowerCasedName}`}
     >
       <div className={classes["image-container"]}>
         {view === "tile" && onDetail && (
@@ -87,10 +89,11 @@ export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetai
           <Link
             href={pokemonLink}
             className={clsx(classes.name, { [classes.disabled]: pokemonLinkDisabled })}
+            data-testid="pokemon-name"
           >{pokemon.name}</Link>
 
           {pokemon.types && pokemon.types.length > 0 && (
-            <span>{pokemon.types.join(", ")}</span>
+            <span data-testid="pokemon-types">{pokemon.types.join(", ")}</span>
           )}
         </div>
 
@@ -103,14 +106,14 @@ export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetai
       {isNumber(pokemon.maxCP) && (
         <div className={clsx(classes.footer, classes.progress)}>
           <PokemonProgressBar status="error" />
-          <span>CP: {pokemon.maxCP}</span>
+          <span>CP: <span data-testid="pokemon-cp">{pokemon.maxCP}</span></span>
         </div>
       )}
 
       {isNumber(pokemon.maxHP) && (
         <div className={clsx(classes.footer, classes.progress)}>
           <PokemonProgressBar status="active" />
-          <span>HP: {pokemon.maxHP}</span>
+          <span>HP: <span data-testid="pokemon-hp">{pokemon.maxHP}</span></span>
         </div>
       )}
 

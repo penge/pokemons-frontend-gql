@@ -40,8 +40,8 @@ export const Header = ({
           selectedIndex={onlyFavorite ? 1 : 0}
           size="lg"
         >
-          <Switch text="All" />
-          <Switch text="Favorites" />
+          <Switch text="All" data-testid="all-button" />
+          <Switch text="Favorites" data-testid="favorites-button" />
         </ContentSwitcher>
       </div>
 
@@ -55,6 +55,7 @@ export const Header = ({
             const search = event.target.value;
             (search ? debouncedOnSearch : onSearch)(search);
           }}
+          data-testid="search-input"
         />
 
         <Select
@@ -64,6 +65,7 @@ export const Header = ({
           onChange={(event) => push({ onlyFavorite, type: event.target.value })}
           defaultValue={type}
           noLabel
+          data-testid="type-filter"
         >
           <SelectItem value="" text="(Any type)" />
           {pokemonTypes.map((pokemonType) => (

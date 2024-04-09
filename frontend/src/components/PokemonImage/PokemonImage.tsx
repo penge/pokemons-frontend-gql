@@ -12,6 +12,6 @@ interface PokemonImageProps {
 export const PokemonImage = ({ image, name, size: { width, height } }: PokemonImageProps) => (
   <div className={classes["image-container"]} style={{ width, height }}>
     {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img src={image} alt={name} />
+    <img src={image} alt={name} data-testid="pokemon-image" />
   </div>
 );
