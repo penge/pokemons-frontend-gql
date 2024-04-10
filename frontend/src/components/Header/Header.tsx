@@ -51,10 +51,7 @@ export const Header = ({
           size="md"
           placeholder="Search"
           labelText=""
-          onChange={(event) => {
-            const search = event.target.value;
-            (search ? debouncedOnSearch : onSearch)(search);
-          }}
+          onChange={(event) => debouncedOnSearch(event.target.value)}
           data-testid="search-input"
         />
 
