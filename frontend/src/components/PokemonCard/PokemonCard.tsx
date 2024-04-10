@@ -2,9 +2,11 @@ import React, { LegacyRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { isEqual, isNumber } from "lodash-es";
+import { isEqual, isNumber, sortBy } from "lodash-es";
 import {
   Pokemon,
+  PokemonConnection,
+  PokemonsQueryInput,
   useFavoritePokemonMutation,
   useUnFavoritePokemonMutation,
 } from "@/api/generated/graphql";
@@ -17,6 +19,10 @@ import { PokemonProgressBar } from "@/components/PokemonProgressBar/PokemonProgr
 import { PokemonDimension } from "@/components/PokemonDimension/PokemonDimension";
 import { addNotification } from "@/api/notifications";
 import classes from "./PokemonCard.module.scss";
+
+const parseStoreFieldName = (storeFieldName: string) => (
+  (JSON.parse(storeFieldName.replace("pokemons:", "")) as { query: PokemonsQueryInput }).query
+);
 
 export type PokemonCard =
   Pick<Pokemon, "id" | "name" | "image" | "isFavorite">
@@ -42,12 +48,65 @@ export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetai
 
   const [favorite] = useFavoritePokemonMutation({
     variables,
-    onCompleted(data) { data.favoritePokemon && onCompleted(data.favoritePokemon); }
+    onCompleted(data) { data.favoritePokemon && onCompleted(data.favoritePokemon); },
+    update(cache) {
+      cache.modify({
+        fields: {
+          pokemons(existing, { storeFieldName, readField }) {
+            const query = parseStoreFieldName(storeFieldName);
+            if (!query.filter || !query.filter.isFavorite) {
+              return existing;
+            }
+
+            const foundPokemonRef = cache.identify(pokemon);
+            if (!foundPokemonRef) {
+              return existing;
+            }
+
+            const types = readField<string[]>("types", pokemon);
+            if (!types || (query.filter.type && !types.includes(query.filter.type))) {
+              return existing;
+            }
+
+            const connection = existing as PokemonConnection;
+            const edges = sortBy([...connection.edges, { "__ref": foundPokemonRef }], "__ref");
+
+            return {
+              ...connection,
+              edges,
+            };
+          },
+        },
+      });
+    }
   });
 
   const [unfavorite] = useUnFavoritePokemonMutation({
     variables,
-    onCompleted(data) { data.unFavoritePokemon && onCompleted(data.unFavoritePokemon); }
+    onCompleted(data) { data.unFavoritePokemon && onCompleted(data.unFavoritePokemon); },
+    update(cache) {
+      cache.modify({
+        fields: {
+          pokemons(existing, { storeFieldName, readField }) {
+            const query = parseStoreFieldName(storeFieldName);
+            if (!query.filter || !query.filter.isFavorite) {
+              return existing;
+            }
+
+            const connection = existing as PokemonConnection;
+            const edges = connection.edges.filter((pokemon) => {
+              const isFavorite = readField("isFavorite", pokemon);
+              return isFavorite;
+            });
+
+            return {
+              ...connection,
+              edges,
+            };
+          },
+        },
+      });
+    }
   });
 
   return (

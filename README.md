@@ -31,16 +31,11 @@ At the end, I have added example tests. I have used [Vitest](https://vitest.dev/
 
 ### Technical challenges
 
-There have been challenges along the way that could be a good source for discussion and improvement:
+Updating the Apollo Cache for **Favorites**, particularly when combined with infinite scrolling, was challenging.
+I tackled this using `cache.modify`, `storeFieldName`, and the `merge` function.
 
-1. After a mutation (unfavorite pokemon), I would like to be able to modify cache [only for certain queries](https://github.com/apollographql/apollo-client/issues/7129) (not all queries) based on their key arguments.
-
-2. After calling a Lazy query, and then calling Query (not Lazy) for the same query, I would like Query to retrieve results from cache, but they seem to be two different cache groups and so a network request is made.
-
-I have tackled these challenges by defining a custom `read` function inside the client.
-
-The next challenge I had, is [no useNotification hook](https://github.com/carbon-design-system/carbon/issues/8405) (in Carbon).
-I decided to go for easiest alternative solution using [**Reactive variables**](https://www.apollographql.com/docs/react/local-state/reactive-variables), as we use Apollo Client already.
+There is [no useNotification hook](https://github.com/carbon-design-system/carbon/issues/8405) (in Carbon), so
+I decided to manage notifications using [Reactive variables](https://www.apollographql.com/docs/react/local-state/reactive-variables), as we use Apollo Client already.
 
 <br>
 
