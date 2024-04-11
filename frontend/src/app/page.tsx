@@ -35,6 +35,7 @@ export default function PokemonsPage() {
         },
       },
     },
+    skip: isNull(type) || isNull(onlyFavorite)
   });
 
   const gotAllPokemons = useMemo<boolean>(() => (
