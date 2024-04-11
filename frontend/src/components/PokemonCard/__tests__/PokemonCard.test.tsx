@@ -36,6 +36,7 @@ test("PokemonCard - basic info", () => {
     </Providers>
   );
 
+  expect(screen.getByTestId("pokemon-bulbasaur"));
   expect(screen.getByTestId("pokemon-image").getAttribute("src")).toBe("https://img.pokemondb.net/artwork/bulbasaur.jpg");
   expect(screen.getByTestId("pokemon-name").textContent).toBe("Bulbasaur");
   expect(screen.getByTestId("pokemon-types").textContent).toBe("Grass, Poison");
@@ -54,12 +55,46 @@ test("PokemonCard - all info", () => {
 
   expect(screen.getByTestId("play-pokemon-sound-button").getAttribute("data-sound")).toBe("http://localhost:4000/sounds/1");
 
+  expect(screen.getByTestId("pokemon-cp").textContent).toBe("951");
+  expect(screen.getByTestId("pokemon-hp").textContent).toBe("1071");
+
   expect(screen.getByTestId("pokemon-minimum-weight").textContent).toBe("6.04kg");
   expect(screen.getByTestId("pokemon-maximum-weight").textContent).toBe("7.76kg");
 
   expect(screen.getByTestId("pokemon-minimum-height").textContent).toBe("0.61m");
   expect(screen.getByTestId("pokemon-maximum-height").textContent).toBe("0.79m");
+});
 
-  expect(screen.getByTestId("pokemon-cp").textContent).toBe("951");
-  expect(screen.getByTestId("pokemon-hp").textContent).toBe("1071");
+test("PokemonCard - name with special characters", () => {
+  render(
+    <Providers>
+      <PokemonCard
+        pokemon={{
+          id: "122",
+          name: "Mr. Mime",
+          image: "https://img.pokemondb.net/artwork/mr-mime.jpg",
+          isFavorite: true,
+        }}
+        view="tile"
+      />
+    </Providers>
+  );
+
+  expect(screen.getByTestId("pokemon-mr-mime"));
+
+  render(
+    <Providers>
+      <PokemonCard
+        pokemon={{
+          "id": "083",
+          "name": "Farfetch'd",
+          image: "https://img.pokemondb.net/artwork/farfetchd.jpg",
+          isFavorite: true,
+        }}
+        view="tile"
+      />
+    </Providers>
+  );
+
+  expect(screen.getByTestId("pokemon-farfetchd"));
 });

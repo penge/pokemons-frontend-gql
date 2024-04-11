@@ -8,7 +8,7 @@ import classes from "./page.module.scss";
 
 export default function PokemonPage({ params }: { params: { name: string } }) {
   const pokemonByNameQueryResult = usePokemonByNameQuery({
-    variables: { name: params.name },
+    variables: { name: decodeURI(params.name) },
   });
 
   if (pokemonByNameQueryResult.loading) {

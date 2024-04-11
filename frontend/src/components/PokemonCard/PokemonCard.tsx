@@ -2,7 +2,7 @@ import React, { LegacyRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { isEqual, isNumber, sortBy } from "lodash-es";
+import { isEqual, isNumber, sortBy, kebabCase } from "lodash-es";
 import {
   Pokemon,
   PokemonConnection,
@@ -37,8 +37,9 @@ interface PokemonCardProps {
 export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetail }: PokemonCardProps, ref?: LegacyRef<HTMLDivElement>) => {
   const pathname = usePathname();
 
-  const pokemonLowerCasedName = pokemon.name.toLowerCase();
-  const pokemonLink = `/${pokemonLowerCasedName}`;
+  const pokemonNameKebabCased = kebabCase(pokemon.name);
+  const pokemonNameEncoded = encodeURI(pokemon.name.toLowerCase());
+  const pokemonLink = `/${pokemonNameEncoded}`;
   const pokemonLinkDisabled = pathname === pokemonLink;
 
   const variables = { id: pokemon.id };
@@ -113,7 +114,7 @@ export const PokemonCard = React.memo(React.forwardRef(({ pokemon, view, onDetai
     <div
       className={clsx(classes.pokemon, classes[view])}
       ref={ref}
-      data-testid={`pokemon-${pokemonLowerCasedName}`}
+      data-testid={`pokemon-${pokemonNameKebabCased}`}
     >
       <div className={classes["image-container"]}>
         {view === "tile" && onDetail && (
